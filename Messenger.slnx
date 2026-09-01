@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="Messenger.Domain/Messenger.Domain.csproj" />
   <Project Path="Messenger/Messenger.csproj" />
 </Solution>
