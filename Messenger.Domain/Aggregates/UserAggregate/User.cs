@@ -1,13 +1,13 @@
 using Messenger.Domain.Abstractions;
 using Messenger.Domain.ValueObjects;
 
-namespace Messenger.Domain.Aggregates.UserAggregates;
+namespace Messenger.Domain.Aggregates.UserAggregate;
 
 public class User : AggregateRoot
 {
     // Identity
     public UserName Username { get; private set; } 
-    public string Email { get; private set; }
+    public Email Email { get; private set; }
 
      // Authentication
     public string PasswordHash { get; private set; } // bcrypt
@@ -15,7 +15,7 @@ public class User : AggregateRoot
     // Profile
     public UserProfile Profile { get; private set; }
     public string Bio { get; private set; }
-    public string AvatarUrl { get; private set; }
+    public Uri AvatarUrl { get; private set; }
 
     // E2EE Keys (Signal Protocol)
     public PublicKey IdentityKey { get; private set; }      // Долгосрочный ключ
