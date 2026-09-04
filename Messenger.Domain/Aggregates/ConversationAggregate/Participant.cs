@@ -21,14 +21,6 @@ public class Participant : Entity
     }
 }
 
-public record ConversationSettings(
-    bool IsEncrypted,                    // Всегда true для E2EE
-    bool IsMuted,                        // Отключены уведомления
-    bool DisappearingMessages,           // Сообщения исчезают
-    int? DisappearingMessagesTimeout,    // Через сколько секунд
-    bool IsPinned                        // Закреплён в списке
-);
-
 public enum ParticipantRole 
 { 
     Admin = 1, 

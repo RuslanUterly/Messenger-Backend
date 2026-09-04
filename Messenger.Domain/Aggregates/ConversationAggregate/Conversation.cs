@@ -12,7 +12,7 @@ public class Conversation
     private List<Participant> _participants = new();
     public IReadOnlyCollection<Participant> Participants => _participants.AsReadOnly();
 
-    // Settings
+    // Settings (jsonb)
     public ConversationSettings Settings { get; private set; }
     
     // Timestamps
@@ -31,3 +31,10 @@ public enum ConversationType
     Group,
     Broadcast,
 }
+
+public record ConversationSettings(
+    bool IsEncrypted,                    // Всегда true для E2EE
+    bool IsMuted,                        // Отключены уведомления
+    bool IsPinned                        // Закреплён в списке
+);
+
