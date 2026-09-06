@@ -8,27 +8,17 @@ public class Message : AggregateRoot
     public Guid ConversationId { get; private set; }
     public Guid SenderId { get; private set; }
 
+    public long Sequence { get; private set; }
+
     // Content (E2EE encrypted)
     public string EncryptedContent { get; private set; }      // Зашифрованный JSON
-    public string ContentType { get; private set; }           // "text", "image", "file"
+    public MessageType Type { get; private set; }           // "text", "image", "file"
     
-    // Metadata
-    public long Timestamp { get; private set; }               // Unix timestamp (клиентский)
-    public long? ServerTimestamp { get; private set; }        // Unix timestamp (серверный)
-    
-    // E2EE
-    public string MessageIdForProtocol { get; private set; }  // Message ID для Signal Protocol
-    public string SenderChainKeyIndex { get; private set; }   // Для Ratchet
-    public string SenderSignature { get; private set; }       // Подпись для верификации
     
     // Threading
     public Guid? ReplyToId { get; private set; }         // Ответ на сообщение
     public Guid? EditOfId { get; private set; }          // Редактирование
-    public bool IsDeleted { get; private set; }               // Soft delete
-    
-    // Statuses
-    private List<MessageStatus> _statuses = new();
-    public IReadOnlyCollection<MessageStatus> Statuses => _statuses.AsReadOnly();
+    public bool IsDeleted { get; private set; }          // Soft delete
     
     // Attachments
     private List<MessageAttachment> _attachments = new();
@@ -43,3 +33,5 @@ public record MessageAttachment(
     string EncryptedUrl,      // Зашифрованная ссылка на файл
     string ThumbnailUrl       // Для изображений
 );
+
+public enum MessageType { Text = 1, Image, Video, Voice, File }

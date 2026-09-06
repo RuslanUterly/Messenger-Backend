@@ -2,25 +2,21 @@ using Messenger.Domain.Abstractions;
 
 namespace Messenger.Domain.Aggregates.MessageAggregate;
 
-public class MessageStatus : Entity
+public class MessageDelivery : Entity
 {
+    public Guid MessageId { get; private set; }
     public Guid UserId { get; private set; }
-    public MessageStatusType Status { get; private set; }
-    public DateTime Timestamp { get; private set; }
-    public string? ErrorReason { get; private set; }
-    
-    public void UpdateStatus(MessageStatusType newStatus)
+    public DeliveryStatus Status { get; private set; }  // Sent / Delivered / Failed
+    public DateTimeOffset UpdatedAt { get; private set; }
+
+    public void MarkDelivered(DateTimeOffset now)
     {
-        Status = newStatus;
+        if (Status == DeliveryStatus.Failed)
+            throw new DomainException("Terminal status");
+            
+        Status = DeliveryStatus.Delivered;
+        UpdatedAt = now;   // ← как и в MarkRead, ты забыл обновить время
     }
 }
 
-public enum MessageStatusType
-{
-    Pending = 1,
-    Sent,
-    Delivered,
-    Read,
-    Failed,
-    Deleted
-}
+public enum DeliveryStatus { Sent = 1, Delivered, Failed }

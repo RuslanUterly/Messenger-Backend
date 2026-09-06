@@ -3,7 +3,7 @@ namespace Messenger.Domain.Abstractions;
 public class Entity
 {
     public Guid Id { get; init; } = Guid.CreateVersion7();
-    public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
+    public DateTimeOffset CreatedAt { get; init; } = DateTimeOffset.UtcNow;
 
     public override bool Equals(object? obj)
     {
