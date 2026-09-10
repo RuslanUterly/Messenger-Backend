@@ -14,7 +14,6 @@ public class Message : AggregateRoot
     public string EncryptedContent { get; private set; }      // Зашифрованный JSON
     public MessageType Type { get; private set; }           // "text", "image", "file"
     
-    
     // Threading
     public Guid? ReplyToId { get; private set; }         // Ответ на сообщение
     public Guid? EditOfId { get; private set; }          // Редактирование
