@@ -1,4 +1,4 @@
 <Solution>
   <Project Path="Messenger.Domain/Messenger.Domain.csproj" />
-  <Project Path="Messenger/Messenger.csproj" />
+  <Project Path="Messenger.Api/Messenger.Api.csproj" />
 </Solution>
