@@ -1,5 +1,4 @@
 ﻿using Messenger.Domain.Abstractions;
-using Messenger.Domain.Aggregates.UserAggregate;
 
 namespace Messenger.Domain.Aggregates.DeviceAggregate;
 
@@ -14,7 +13,8 @@ public class Device : AggregateRoot
     // E2EE Keys для этого устройства
     public PublicKey IdentityKey { get; private set; }
     public SignedPreKey SignedPreKey { get; private set; }
-    public List<OneTimePreKey> OneTimePreKeys { get; private set; }
+    private List<OneTimePreKey> _oneTimePreKeys = new();
+    public IReadOnlyCollection<OneTimePreKey> OneTimePreKeys => _oneTimePreKeys.AsReadOnly();
 
     // Session
     public string RefreshTokenHash { get; private set; }
@@ -24,6 +24,7 @@ public class Device : AggregateRoot
 
 public record SignedPreKey(long Id, PublicKey Key, string Signature);
 public record OneTimePreKey(long Id, PublicKey Key);
+public record PublicKey(string Algorithm, string KeyData); // X25519, Base64
 
 public enum DeviceType 
 { 

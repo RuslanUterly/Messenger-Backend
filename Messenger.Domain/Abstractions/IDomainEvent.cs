@@ -2,5 +2,5 @@ namespace Messenger.Domain.Abstractions;
 
 public interface IDomainEvent
 {
-    DateTime OccurredOn { get; }
+    DateTimeOffset OccurredOn { get; }
 }

@@ -16,7 +16,8 @@ public class Message : AggregateRoot
     
     // Threading
     public Guid? ReplyToId { get; private set; }         // Ответ на сообщение
-    public Guid? EditOfId { get; private set; }          // Редактирование
+    // public Guid? EditOfId { get; private set; }          // Редактирование
+    public DateTimeOffset? EditedAt { get; private set; }
     public bool IsDeleted { get; private set; }          // Soft delete
     
     // Attachments
@@ -25,12 +26,12 @@ public class Message : AggregateRoot
 }
 
 public record MessageAttachment(
-    string Id,
+    Guid Id,
     string FileName,
     long FileSize,
     string MimeType,
     string EncryptedUrl,      // Зашифрованная ссылка на файл
-    string ThumbnailUrl       // Для изображений
+    string? ThumbnailUrl       // Для изображений
 );
 
 public enum MessageType { Text = 1, Image, Video, Voice, File }

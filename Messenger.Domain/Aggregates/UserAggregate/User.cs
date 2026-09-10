@@ -14,23 +14,7 @@ public class User : AggregateRoot
     
     // Profile
     public UserProfile Profile { get; private set; }
-    public Uri AvatarUrl { get; private set; }
-
-    // E2EE Keys (Signal Protocol)
-    // public PublicKey IdentityKey { get; private set; }      // Долгосрочный ключ
-    // public PublicKey SignedPreKey { get; private set; }     // Подписанный пре-ключ
-    // public List<PublicKey> OneTimePreKeys { get; private set; } // Одноразовые ключи
-    
-    // Security
-    // public SafetyNumber SafetyNumber { get; private set; }
-    // public DateTime LastActivityAt { get; private set; }
-    
-    // Status (переделать через redis)
-    public UserStatus Status { get; private set; } // Online/Offline/Away
-    // public bool IsActive { get; private set; }
+    public Uri? AvatarUrl { get; private set; }
 }
 
 public record UserProfile(string DisplayName, string? Bio);
-public record PublicKey(string Algorithm, string KeyData); // X25519, Base64
-public record SafetyNumber(string Value); // 60 цифр для верификации
-public enum UserStatus { Online, Offline, Away }
