@@ -1,5 +1,7 @@
 using Messenger.Api.Context;
+using Messenger.Api.Infrastructure.Email;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,13 @@ builder.Services.AddControllers();
 // Регистрация DbContext (PostgreSQL)
 builder.Services.AddDbContext<MessengerContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("MessengerDatabase")));
+
+builder.Services
+    .AddOptions<SmtpOptions>()
+    .Bind(builder.Configuration.GetSection("Smtp"))
+    .ValidateOnStart();
+
+builder.Services.AddSingleton<IValidateOptions<SmtpOptions>, SmtpOptionsValidator>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
