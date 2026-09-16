@@ -5,6 +5,8 @@ namespace Messenger.Domain.Aggregates.ConversationAggregate;
 public class Participant : Entity
 {
     public Guid UserId { get; private set; }
+    public Guid ConversationId { get; private set; }
+
     public ParticipantRole Role { get; private set; } // Admin, Member, ReadOnly
     public DateTimeOffset JoinedAt { get; private set; }
     public DateTimeOffset? LastReadAt { get; private set; }
