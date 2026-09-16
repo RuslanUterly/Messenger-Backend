@@ -8,5 +8,5 @@ public class SmtpOptions
     public string UserName { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public string FromEmail { get; set; } = string.Empty;
-    public string FromName { get; set; } = "Mess9";
+    public string FromName { get; set; } = "CheckIN";
 }
