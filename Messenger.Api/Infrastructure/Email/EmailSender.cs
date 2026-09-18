@@ -35,7 +35,7 @@ public partial class EmailSender(
             EnableSsl = options.EnableSsl,
         };
 
-        options.UserName.IsNotEmpty(c =>
+        options.UserName.IsNotEmpty(_ =>
         {
             client.Credentials = new NetworkCredential(options.UserName, options.Password);
         });
