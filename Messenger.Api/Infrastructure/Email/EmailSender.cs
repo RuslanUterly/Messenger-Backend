@@ -35,10 +35,10 @@ public partial class EmailSender(
             EnableSsl = options.EnableSsl,
         };
 
-        options.UserName.IsNotEmpty(_ =>
+        if (options.UserName.IsNotEmpty())
         {
             client.Credentials = new NetworkCredential(options.UserName, options.Password);
-        });
+        }
 
         await client.SendMailAsync(message);
         LogEmailSent(toEmail);
