@@ -20,12 +20,6 @@ public partial class EmailSender(
 
     public async Task SendAsync(string toEmail, string subject, string htmlBody)
     {
-        if (string.IsNullOrWhiteSpace(options.Host))
-            throw new InvalidOperationException("SmtpOptions:Host не задан в конфигурации.");
-
-        if (string.IsNullOrWhiteSpace(options.FromEmail))
-            throw new InvalidOperationException("SmtpOptions:FromEmail не задан в конфигурации.");
-
         using var message = new MailMessage
         {
             From = new MailAddress(options.FromEmail, options.FromName),
