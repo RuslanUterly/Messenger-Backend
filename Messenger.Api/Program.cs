@@ -16,9 +16,8 @@ builder.Services.AddDbContext<MessengerContext>(options =>
 builder.Services
     .AddOptions<SmtpOptions>()
     .Bind(builder.Configuration.GetSection("Smtp"))
+    .ValidateDataAnnotations()
     .ValidateOnStart();
-
-builder.Services.AddSingleton<IValidateOptions<SmtpOptions>, SmtpOptionsValidator>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
