@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using JasperFx.Core;
+using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 
@@ -34,10 +35,10 @@ public partial class EmailSender(
             EnableSsl = options.EnableSsl,
         };
 
-        if (!string.IsNullOrWhiteSpace(options.UserName))
+        options.UserName.IsNotEmpty(c =>
         {
             client.Credentials = new NetworkCredential(options.UserName, options.Password);
-        }
+        });
 
         await client.SendMailAsync(message);
         LogEmailSent(toEmail);

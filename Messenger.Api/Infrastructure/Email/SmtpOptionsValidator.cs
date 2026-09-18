@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using JasperFx.Core;
 
 namespace Messenger.Api.Infrastructure.Email;
 
@@ -8,10 +9,10 @@ public sealed class SmtpOptionsValidator : IValidateOptions<SmtpOptions>
     {
         var failures = new List<string>();
 
-        if (string.IsNullOrWhiteSpace(options.Host))
+        if (options.Host.IsEmpty())
             failures.Add("SmtpOptions:Host не задан в конфигурации.");
 
-        if (string.IsNullOrWhiteSpace(options.FromEmail))
+        if (options.FromEmail.IsEmpty())
             failures.Add("SmtpOptions:FromEmail не задан в конфигурации.");
 
         return failures.Count > 0
