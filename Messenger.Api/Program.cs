@@ -4,19 +4,33 @@ using Messenger.Api.Infrastructure.Email;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
 using System.Text;
+using Wolverine;
+using Wolverine.EntityFrameworkCore;
+using Wolverine.ErrorHandling;
+using Wolverine.Postgresql;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Регистрация DbContext (PostgreSQL) + Wolverine
+builder.Host.UseWolverine(opts =>
+{
+    opts.PersistMessagesWithPostgresql(
+        builder.Configuration.GetConnectionString("MessengerDatabase")!, "wolverine");
 
-builder.Services.AddControllers();
+    opts.UseEntityFrameworkCoreTransactions();
 
-// Регистрация DbContext (PostgreSQL)
+    opts.Policies.OnException<PostgresException>()
+        .RetryWithCooldown(TimeSpan.FromMilliseconds(50), TimeSpan.FromSeconds(1));
+});
+
 builder.Services.AddDbContext<MessengerContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("MessengerDatabase"));
-});
+},
+// DbContextOptions как Singleton - значимая оптимизация для Wolverine
+optionsLifetime: ServiceLifetime.Singleton);
 
 // Регистрация Email сервиса
 builder.Services
@@ -34,7 +48,7 @@ builder.Services
     .ValidateDataAnnotations()
     .ValidateOnStart();
 
-builder.Services.AddSingleton<ITokenService, TokenProvider>();
+builder.Services.AddScoped<TokenProvider>();
 
 builder.Services.AddAuthentication(options =>
 {
@@ -73,9 +87,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapControllers();
-
 app.Run();
