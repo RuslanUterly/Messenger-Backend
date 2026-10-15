@@ -1,5 +1,5 @@
 using Messenger.Api.Context;
-using Messenger.Api.Features.Auth.Jwt;
+using Messenger.Api.Features.Auth.Tokens;
 using Messenger.Api.Infrastructure.Email;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;

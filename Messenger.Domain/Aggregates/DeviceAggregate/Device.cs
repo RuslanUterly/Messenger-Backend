@@ -17,7 +17,6 @@ public class Device : AggregateRoot
     public IReadOnlyCollection<OneTimePreKey> OneTimePreKeys => _oneTimePreKeys.AsReadOnly();
 
     // Session
-    public string RefreshTokenHash { get; private set; }
     public DateTimeOffset LastActivityAt { get; private set; }
     public bool IsActive { get; private set; }
 }

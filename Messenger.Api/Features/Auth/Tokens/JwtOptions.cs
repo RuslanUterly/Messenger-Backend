@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Messenger.Api.Features.Auth.Jwt;
+namespace Messenger.Api.Features.Auth.Tokens;
 
 public class JwtOptions
 {

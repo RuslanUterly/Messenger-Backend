@@ -20,7 +20,6 @@ public sealed class DeviceConfiguration : IEntityTypeConfiguration<Device>
         builder.Property(d => d.DeviceName).HasMaxLength(100).IsRequired();
         builder.Property(d => d.DeviceId).HasMaxLength(100).IsRequired();
         builder.Property(d => d.DeviceType).HasConversion<string>();
-        builder.Property(d => d.RefreshTokenHash).HasMaxLength(256).IsRequired();
 
         builder.HasIndex(d => new { d.UserId, d.DeviceId }).IsUnique();
 

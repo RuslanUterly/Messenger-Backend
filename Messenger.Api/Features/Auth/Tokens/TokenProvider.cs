@@ -4,28 +4,21 @@ using Messenger.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Buffers.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Messenger.Api.Features.Auth.Jwt;
+namespace Messenger.Api.Features.Auth.Tokens;
 
 public class TokenProvider(MessengerContext context, IOptions<JwtOptions> options)
 {
     public (string AccessToken, string RefreshToken) GenerateTokens(User user)
     {
         var accessToken = GenerateAccessToken(user.Id, user.Role.ToString());
-        var rawRefreshToken = Convert.ToBase64String(RandomNumberGenerator.GetBytes(48));
-        var refreshToken = new RefreshToken
-        {
-            UserId = user.Id,
-            TokenHash = Convert.ToHexString(          // ← в БД только хэш
-                SHA256.HashData(Encoding.UTF8.GetBytes(rawRefreshToken))),
-            ExpiresAt = DateTimeOffset.UtcNow.AddDays(7),
-        };
-
-        context.RefreshTokens.Add(refreshToken);
+        var rawRefreshToken = Base64Url.EncodeToString(RandomNumberGenerator.GetBytes(48));
+        
         return (accessToken, rawRefreshToken);
     }
 
@@ -56,32 +49,6 @@ public class TokenProvider(MessengerContext context, IOptions<JwtOptions> option
 
         var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
         return accessToken;
-    }
-
-    public async Task<(string AccessToken, string RefreshToken)> RotateAsync(string rawRefreshToken, CancellationToken ct)
-    {
-        var hash = Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(rawRefreshToken)));
-
-        var stored = await context.RefreshTokens.SingleAsync(t => t.TokenHash == hash, ct)
-            ?? throw new UnauthorizedAccessException("Неизвестный refresh token");
-
-        if (!stored.IsActive)
-        {
-            // reuse detection: предъявили УЖЕ использованный токен = признак кражи
-            await RevokeAllForUserAsync(stored.UserId, ct);
-            throw new UnauthorizedAccessException("Refresh token reuse detected");
-        }
-
-        var user = await context.Users.FindAsync([stored.UserId], ct)
-            ?? throw new UnauthorizedAccessException("Пользователь не найден");
-
-        if (user.Status == UserStatus.Banned)              // бан применяется и к сессиям
-            throw new UnauthorizedAccessException("Пользователь в бане");
-
-        stored.Revoke();
-
-        var (access, rawNew) = GenerateTokens(user);       // новый refresh со ReplacedById = stored.Id
-        return (access, rawNew);
     }
 
     public async Task RevokeAllForUserAsync(Guid userId, CancellationToken ct)
