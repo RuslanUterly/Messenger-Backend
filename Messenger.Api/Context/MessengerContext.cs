@@ -2,6 +2,7 @@ using Messenger.Domain.Aggregates.ConversationAggregate;
 using Messenger.Domain.Aggregates.DeviceAggregate;
 using Messenger.Domain.Aggregates.MessageAggregate;
 using Messenger.Domain.Aggregates.UserAggregate;
+using Messenger.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Messenger.Api.Context;
@@ -9,6 +10,7 @@ namespace Messenger.Api.Context;
 public class MessengerContext(DbContextOptions<MessengerContext> options) : DbContext(options)
 {
     public DbSet<User> Users => Set<User>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Conversation> Conversations => Set<Conversation>();
     public DbSet<Device> Devices => Set<Device>();
     public DbSet<Message> Messages => Set<Message>();
